@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:navigation_app/services/navigation.dart';
 
 class FirstPage extends StatelessWidget {
   @override
@@ -18,7 +20,7 @@ class FirstPage extends StatelessWidget {
             TextButton(
               child: Text('Go to second'),
               onPressed: () {
-                Navigator.of(context).pushNamed('/second', arguments: '1');
+                GetIt.I<NavigationService>().pushNamed('/second', arguments: '1');
               },
             )
           ],
