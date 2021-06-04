@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navigation_app/pages/error.dart';
 import 'package:navigation_app/pages/first.dart';
 import 'package:navigation_app/pages/second.dart';
 
@@ -15,7 +16,18 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       initialRoute: '/',
-      routes: {'/': (_) => FirstPage(), '/second': (_) => SecondPage(data: 'Title')},
+      routes: {
+        '/': (_) => FirstPage(),
+        '/second': (BuildContext context) {
+          Object? args = ModalRoute.of(context)!.settings.arguments;
+
+          if (args != null && args is String) {
+            return SecondPage(data: args);
+          }
+
+          return ErrorPage();
+        }
+      },
     );
   }
 }

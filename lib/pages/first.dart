@@ -18,7 +18,7 @@ class FirstPage extends StatelessWidget {
             TextButton(
               child: Text('Go to second'),
               onPressed: () {
-                Navigator.of(context).pushNamed('/second');
+                Navigator.of(context).pushNamed('/second', arguments: 'Hi there!!');
               },
             )
           ],
