@@ -19,10 +19,16 @@ class MyApp extends StatelessWidget {
 
 enum Tab { red, green, blue }
 
-Map<int, Tab> tabMap = {
+Map<int, Tab> tabIndexMap = {
   0: Tab.red,
   1: Tab.green,
   2: Tab.blue,
+};
+
+Map<Tab, Color> tabColorMap = {
+  Tab.red: Colors.red,
+  Tab.green: Colors.green,
+  Tab.blue: Colors.blue,
 };
 
 class App extends StatefulWidget {
@@ -44,9 +50,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: Colors.amber,
-      ),
+      body: _buildBody(),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -74,6 +78,33 @@ class _AppState extends State<App> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         elevation: 5,
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    return Container(
+      color: tabColorMap[tabIndexMap[_selectedIndex]],
+      child: Center(
+        child: TextButton(
+          child: Text(
+            'PRESS',
+            style: TextStyle(fontSize: 32.0, color: Colors.white),
+          ),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) {
+                return Scaffold(
+                  appBar: AppBar(
+                    title: Text(tabIndexMap[_selectedIndex].toString()),
+                    backgroundColor: tabColorMap[tabIndexMap[_selectedIndex]],
+                  ),
+                  backgroundColor: tabColorMap[tabIndexMap[_selectedIndex]],
+                );
+              }),
+            );
+          },
+        ),
       ),
     );
   }
