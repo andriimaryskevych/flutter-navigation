@@ -119,7 +119,7 @@ class StackNavigatorChild extends StatelessWidget {
 
             if (routeName == '/') {
               return MaterialPageRoute(builder: (_) {
-                return ColorListPage();
+                return ColorListPage(tab);
               });
             }
 
@@ -127,7 +127,7 @@ class StackNavigatorChild extends StatelessWidget {
               final int colorIndex = settings.arguments as int;
 
               return MaterialPageRoute(builder: (_) {
-                return ColorDetailPage(colorIndex);
+                return ColorDetailPage(tab, colorIndex);
               });
             }
           },
@@ -138,50 +138,61 @@ class StackNavigatorChild extends StatelessWidget {
 }
 
 class ColorListPage extends StatelessWidget {
-  const ColorListPage({Key? key}) : super(key: key);
+  final TabItem tabItem;
+
+  final List<int> materialIndices = [900, 800, 700, 600, 500, 400, 300, 200, 100, 50];
+
+  ColorListPage(this.tabItem, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(
-        builder: (BuildContext context) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Center'),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/details', arguments: 500);
-                  },
-                  child: Text(
-                    'Details',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.blueAccent,
-                    ),
-                  ),
-                )
-              ],
-            ),
-          );
-        },
+      appBar: AppBar(
+        backgroundColor: activeTabColor[tabItem],
+        title: Text(tabName[tabItem]!),
+        centerTitle: true,
       ),
+      backgroundColor: activeTabColor[tabItem],
+      body: Builder(builder: (BuildContext context) {
+        return ListView.builder(
+          itemCount: materialIndices.length,
+          itemBuilder: (BuildContext content, int index) {
+            int materialIndex = materialIndices[index];
+
+            return Container(
+              color: activeTabColor[tabItem]![materialIndex],
+              child: ListTile(
+                title: Text('$materialIndex', style: TextStyle(fontSize: 24.0)),
+                trailing: Icon(Icons.chevron_right),
+                onTap: () {
+                  Navigator.of(context).pushNamed('/details', arguments: materialIndex);
+                },
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 }
 
 class ColorDetailPage extends StatelessWidget {
+  final TabItem tabItem;
   final int colorIndex;
 
-  const ColorDetailPage(this.colorIndex, {Key? key}) : super(key: key);
+  const ColorDetailPage(this.tabItem, this.colorIndex, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: activeTabColor[tabItem]![colorIndex],
+      appBar: AppBar(
+        backgroundColor: activeTabColor[tabItem],
+        title: Text(tabName[tabItem]!),
+        centerTitle: true,
+      ),
       body: Center(
-        child: Text('Details ' + colorIndex.toString()),
+        child: Text(colorIndex.toString()),
       ),
     );
   }
