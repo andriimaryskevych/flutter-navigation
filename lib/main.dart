@@ -50,7 +50,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildBody(),
+      body: _buildBodyStack(),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -82,29 +82,29 @@ class _AppState extends State<App> {
     );
   }
 
-  Widget _buildBody() {
-    return Container(
-      color: tabColorMap[tabIndexMap[_selectedIndex]],
-      child: Center(
-        child: TextButton(
-          child: Text(
-            'PRESS',
-            style: TextStyle(fontSize: 32.0, color: Colors.white),
-          ),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) {
-                return Scaffold(
-                  appBar: AppBar(
-                    title: Text(tabIndexMap[_selectedIndex].toString()),
-                    backgroundColor: tabColorMap[tabIndexMap[_selectedIndex]],
-                  ),
-                  backgroundColor: tabColorMap[tabIndexMap[_selectedIndex]],
-                );
-              }),
-            );
-          },
-        ),
+  Widget _buildBodyStack() {
+    return Stack(
+      children: [
+        StackNavigatorChild(Colors.red, true),
+        StackNavigatorChild(Colors.green, false),
+        StackNavigatorChild(Colors.blue, false),
+      ],
+    );
+  }
+}
+
+class StackNavigatorChild extends StatelessWidget {
+  final Color color;
+  final bool isVisible;
+
+  const StackNavigatorChild(this.color, this.isVisible, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Offstage(
+      offstage: !isVisible,
+      child: Container(
+        color: color,
       ),
     );
   }
