@@ -152,7 +152,7 @@ class ColorListPage extends StatelessWidget {
         title: Text(tabName[tabItem]!),
         centerTitle: true,
       ),
-      backgroundColor: activeTabColor[tabItem],
+      backgroundColor: Colors.white,
       body: Builder(builder: (BuildContext context) {
         return ListView.builder(
           itemCount: materialIndices.length,
@@ -188,11 +188,8 @@ class ColorDetailPage extends StatelessWidget {
       backgroundColor: activeTabColor[tabItem]![colorIndex],
       appBar: AppBar(
         backgroundColor: activeTabColor[tabItem],
-        title: Text(tabName[tabItem]!),
+        title: Text(tabName[tabItem]! + '[$colorIndex]'),
         centerTitle: true,
-      ),
-      body: Center(
-        child: Text(colorIndex.toString()),
       ),
     );
   }
