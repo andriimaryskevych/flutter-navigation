@@ -57,14 +57,10 @@ class BottomNavigation extends StatelessWidget {
     return BottomNavigationBarItem(
       icon: Icon(
         Icons.layers,
-        color: _colorTabMatching(tabItem),
+        color: activeTabColor[tabItem],
       ),
       label: tabName[tabItem],
     );
-  }
-
-  Color? _colorTabMatching(TabItem item) {
-    return currentTab == item ? activeTabColor[item] : Colors.grey;
   }
 }
 
@@ -116,6 +112,76 @@ class StackNavigatorChild extends StatelessWidget {
       offstage: !isVisible,
       child: Container(
         color: activeTabColor[tab],
+        child: Navigator(
+          initialRoute: '/',
+          onGenerateRoute: (RouteSettings settings) {
+            final String routeName = settings.name ?? '/';
+
+            if (routeName == '/') {
+              return MaterialPageRoute(builder: (_) {
+                return ColorListPage();
+              });
+            }
+
+            if (routeName == '/details') {
+              final int colorIndex = settings.arguments as int;
+
+              return MaterialPageRoute(builder: (_) {
+                return ColorDetailPage(colorIndex);
+              });
+            }
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class ColorListPage extends StatelessWidget {
+  const ColorListPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Builder(
+        builder: (BuildContext context) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Center'),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/details', arguments: 500);
+                  },
+                  child: Text(
+                    'Details',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class ColorDetailPage extends StatelessWidget {
+  final int colorIndex;
+
+  const ColorDetailPage(this.colorIndex, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: Text('Details ' + colorIndex.toString()),
       ),
     );
   }
