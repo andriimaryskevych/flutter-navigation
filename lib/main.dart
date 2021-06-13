@@ -74,28 +74,53 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   TabItem _currentTab = TabItem.red;
 
+  Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys = {
+    TabItem.red: GlobalKey<NavigatorState>(),
+    TabItem.green: GlobalKey<NavigatorState>(),
+    TabItem.blue: GlobalKey<NavigatorState>(),
+  };
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildBodyStack(),
-      bottomNavigationBar: BottomNavigation(
-        currentTab: _currentTab,
-        onSelectTab: (TabItem newTab) {
-          setState(() {
-            _currentTab = newTab;
-          });
-        },
-      ),
-    );
-  }
+    return WillPopScope(
+      onWillPop: () async {
+        final hasPopped = await navigatorKeys[_currentTab]!.currentState!.maybePop();
 
-  Widget _buildBodyStack() {
-    return Stack(
-      children: [
-        StackNavigatorChild(TabItem.red, _currentTab == TabItem.red),
-        StackNavigatorChild(TabItem.green, _currentTab == TabItem.green),
-        StackNavigatorChild(TabItem.blue, _currentTab == TabItem.blue),
-      ],
+        if (hasPopped) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            StackNavigatorChild(
+              TabItem.red,
+              _currentTab == TabItem.red,
+              navigatorKeys[TabItem.red]!,
+            ),
+            StackNavigatorChild(
+              TabItem.green,
+              _currentTab == TabItem.green,
+              navigatorKeys[TabItem.green]!,
+            ),
+            StackNavigatorChild(
+              TabItem.blue,
+              _currentTab == TabItem.blue,
+              navigatorKeys[TabItem.blue]!,
+            ),
+          ],
+        ),
+        bottomNavigationBar: BottomNavigation(
+          currentTab: _currentTab,
+          onSelectTab: (TabItem newTab) {
+            setState(() {
+              _currentTab = newTab;
+            });
+          },
+        ),
+      ),
     );
   }
 }
@@ -103,8 +128,9 @@ class _AppState extends State<App> {
 class StackNavigatorChild extends StatelessWidget {
   final TabItem tab;
   final bool isVisible;
+  final GlobalKey<NavigatorState> navigationKey;
 
-  const StackNavigatorChild(this.tab, this.isVisible, {Key? key}) : super(key: key);
+  const StackNavigatorChild(this.tab, this.isVisible, this.navigationKey, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +139,7 @@ class StackNavigatorChild extends StatelessWidget {
       child: Container(
         color: activeTabColor[tab],
         child: Navigator(
+          key: navigationKey,
           initialRoute: '/',
           onGenerateRoute: (RouteSettings settings) {
             final String routeName = settings.name ?? '/';
