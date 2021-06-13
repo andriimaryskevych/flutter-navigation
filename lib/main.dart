@@ -17,19 +17,56 @@ class MyApp extends StatelessWidget {
   }
 }
 
-enum Tab { red, green, blue }
+enum TabItem { red, green, blue }
 
-Map<int, Tab> tabIndexMap = {
-  0: Tab.red,
-  1: Tab.green,
-  2: Tab.blue,
+const Map<TabItem, String> tabName = {
+  TabItem.red: 'red',
+  TabItem.green: 'green',
+  TabItem.blue: 'blue',
 };
 
-Map<Tab, Color> tabColorMap = {
-  Tab.red: Colors.red,
-  Tab.green: Colors.green,
-  Tab.blue: Colors.blue,
+const Map<TabItem, MaterialColor> activeTabColor = {
+  TabItem.red: Colors.red,
+  TabItem.green: Colors.green,
+  TabItem.blue: Colors.blue,
 };
+
+class BottomNavigation extends StatelessWidget {
+  final TabItem currentTab;
+  final ValueChanged<TabItem> onSelectTab;
+
+  BottomNavigation({
+    required this.currentTab,
+    required this.onSelectTab,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      items: [
+        _buildItem(TabItem.red),
+        _buildItem(TabItem.green),
+        _buildItem(TabItem.blue),
+      ],
+      onTap: (index) => onSelectTab(TabItem.values[index]),
+    );
+  }
+
+  BottomNavigationBarItem _buildItem(TabItem tabItem) {
+    return BottomNavigationBarItem(
+      icon: Icon(
+        Icons.layers,
+        color: _colorTabMatching(tabItem),
+      ),
+      label: tabName[tabItem],
+    );
+  }
+
+  Color? _colorTabMatching(TabItem item) {
+    return currentTab == item ? activeTabColor[item] : Colors.grey;
+  }
+}
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -39,45 +76,19 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  TabItem _currentTab = TabItem.red;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBodyStack(),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.color_lens,
-              color: Colors.red,
-            ),
-            label: 'Red',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.color_lens,
-              color: Colors.green,
-            ),
-            label: 'Green',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.color_lens,
-              color: Colors.blue,
-            ),
-            label: 'Blue',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        elevation: 5,
+      bottomNavigationBar: BottomNavigation(
+        currentTab: _currentTab,
+        onSelectTab: (TabItem newTab) {
+          setState(() {
+            _currentTab = newTab;
+          });
+        },
       ),
     );
   }
@@ -85,26 +96,26 @@ class _AppState extends State<App> {
   Widget _buildBodyStack() {
     return Stack(
       children: [
-        StackNavigatorChild(Colors.red, true),
-        StackNavigatorChild(Colors.green, false),
-        StackNavigatorChild(Colors.blue, false),
+        StackNavigatorChild(TabItem.red, _currentTab == TabItem.red),
+        StackNavigatorChild(TabItem.green, _currentTab == TabItem.green),
+        StackNavigatorChild(TabItem.blue, _currentTab == TabItem.blue),
       ],
     );
   }
 }
 
 class StackNavigatorChild extends StatelessWidget {
-  final Color color;
+  final TabItem tab;
   final bool isVisible;
 
-  const StackNavigatorChild(this.color, this.isVisible, {Key? key}) : super(key: key);
+  const StackNavigatorChild(this.tab, this.isVisible, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Offstage(
       offstage: !isVisible,
       child: Container(
-        color: color,
+        color: activeTabColor[tab],
       ),
     );
   }
