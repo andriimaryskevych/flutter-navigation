@@ -17,10 +17,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
-    Timer.periodic(const Duration(seconds: 1), (_) {
-      homePageState.currentState!._incrementCounter();
-    });
   }
 
   @override
@@ -48,13 +44,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  final GlobalKey<CounterState> counterState = GlobalKey<CounterState>();
 
   @override
   Widget build(BuildContext context) {
@@ -66,21 +56,55 @@ class MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            Counter(
+              key: counterState,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            Counter(
+              key: counterState,
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+    );
+  }
+}
+
+class Counter extends StatefulWidget {
+  const Counter({Key? key}) : super(key: key);
+
+  @override
+  CounterState createState() => CounterState();
+}
+
+class CounterState extends State<Counter> {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'You have pushed the button this many times:',
+        ),
+        Text(
+          '$_counter',
+          style: Theme.of(context).textTheme.headline4,
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 30),
+          child: TextButton(
+            child: Text('Increment'),
+            onPressed: _incrementCounter,
+          ),
+        )
+      ],
     );
   }
 }
