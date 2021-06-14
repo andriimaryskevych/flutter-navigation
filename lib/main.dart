@@ -59,11 +59,26 @@ class MyHomePageState extends State<MyHomePage> {
             Counter(
               key: counterState,
             ),
-            Counter(
-              key: counterState,
-            ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+            return Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Counter(
+                      key: counterState,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }));
+        },
       ),
     );
   }
