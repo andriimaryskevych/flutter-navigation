@@ -117,6 +117,11 @@ class _AppState extends State<App> {
           onSelectTab: (TabItem newTab) {
             setState(() {
               _currentTab = newTab;
+
+              if (_currentTab == TabItem.blue) {
+                navigatorKeys[TabItem.red]!.currentState!.popUntil(ModalRoute.withName('/'));
+                navigatorKeys[TabItem.green]!.currentState!.popUntil((route) => route.settings.name == '/');
+              }
             });
           },
         ),
@@ -145,17 +150,23 @@ class StackNavigatorChild extends StatelessWidget {
             final String routeName = settings.name ?? '/';
 
             if (routeName == '/') {
-              return MaterialPageRoute(builder: (_) {
-                return ColorListPage(tab);
-              });
+              return MaterialPageRoute(
+                settings: settings,
+                builder: (_) {
+                  return ColorListPage(tab);
+                },
+              );
             }
 
             if (routeName == '/details') {
               final int colorIndex = settings.arguments as int;
 
-              return MaterialPageRoute(builder: (_) {
-                return ColorDetailPage(tab, colorIndex);
-              });
+              return MaterialPageRoute(
+                settings: settings,
+                builder: (_) {
+                  return ColorDetailPage(tab, colorIndex);
+                },
+              );
             }
           },
         ),
