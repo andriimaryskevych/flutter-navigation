@@ -16,16 +16,19 @@ class RouteGenerator {
       case homePage:
         return MaterialPageRoute(
           builder: (_) => MyHomePage(title: 'Home page'),
+          settings: settings,
         );
 
       case secondPage:
         return MaterialPageRoute(
           builder: (_) => SecondPage(),
+          settings: settings,
         );
 
       case thirdPage:
         return MaterialPageRoute(
           builder: (_) => ThirdPage(),
+          settings: settings,
         );
 
       default:
