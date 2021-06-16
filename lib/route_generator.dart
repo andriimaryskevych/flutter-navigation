@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:navigation_app/pages/first_page.dart';
 import 'package:navigation_app/pages/second_page.dart';
+import 'package:navigation_app/pages/third_page.dart';
 import 'package:navigation_app/routes.dart';
 
 class RouteGenerator {
@@ -20,6 +21,11 @@ class RouteGenerator {
       case secondPage:
         return MaterialPageRoute(
           builder: (_) => SecondPage(),
+        );
+
+      case thirdPage:
+        return MaterialPageRoute(
+          builder: (_) => ThirdPage(),
         );
 
       default:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navigation_app/routes.dart';
 
 class SecondPage extends StatelessWidget {
   SecondPage({Key? key}) : super(key: key);
@@ -16,6 +17,12 @@ class SecondPage extends StatelessWidget {
             Text(
               'Second page',
             ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(thirdPage);
+              },
+              child: Text('Page 3'),
+            )
           ],
         ),
       ),
