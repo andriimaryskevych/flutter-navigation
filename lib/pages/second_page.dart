@@ -33,7 +33,19 @@ class _SecondPageState extends State<SecondPage> {
                 });
               },
               child: Text('Home'),
-            )
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).popAndPushNamed(thirdPage, result: 'a');
+              },
+              child: Text('PopAndPushNamed 3'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed(thirdPage, result: 'a');
+              },
+              child: Text('PushReplacementNamed 3'),
+            ),
           ],
         ),
       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:navigation_app/routes.dart';
 
+const String tag = '---------------------------------->\n';
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -24,12 +26,21 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               'First page',
             ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).popAndPushNamed(thirdPage, result: 'a');
+              },
+              child: Text('PushReplacementNamed 3'),
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(secondPage);
+        onPressed: () async {
+          dynamic res = await Navigator.of(context).pushNamed(secondPage);
+
+          print('${tag}Second page has popped');
+          print(res.toString());
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
